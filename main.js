@@ -1,16 +1,21 @@
 export { makeGridAreasResizable }
+
 function makeGridAreasResizable(container, elements) {
+
     let thickness = getComputedStyle(container).gap
+
     const placements = {
         "x-": xMinusPlacement,
         "x+": xPlusPlacement,
         "y-": yMinusPlacement,
         "y+": yPlusPlacement,
     }
+
     const axis = {
         "x": xResizable,
         "y": yResizable
     }
+
     for (const element of elements) {
         const gridAreaElement = container.querySelector(element.query)
         for (const { position, area } of element.helpers) {
@@ -42,10 +47,12 @@ function xResizable(gridElement, helper, rowIndexToEdit) {
             xFactor = clientX - sw
         }
     }
+
     function mouseUp(e) {
         gridElement.removeEventListener("mousemove", mouseMove)
         gridElement.removeEventListener("mouseUp", mouseUp)
     }
+
     function mouseMove(e) {
         const { clientX } = e
 
@@ -84,10 +91,12 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
             yFactor = clientY - sw
         }
     }
+
     function mouseUp(e) {
         gridElement.removeEventListener("mousemove", mouseMove)
         gridElement.removeEventListener("mouseUp", mouseUp)
     }
+
     function mouseMove(e) {
         const { clientY } = e
 
@@ -120,6 +129,7 @@ function xMinusPlacement(div, thickness) {
     div.style.cursor = "ew-resize"
     return div
 }
+
 function xPlusPlacement(div, thickness) {
     div.style.right = "0"
     div.style.width = thickness
@@ -128,6 +138,7 @@ function xPlusPlacement(div, thickness) {
     div.style.cursor = "ew-resize"
     return div
 }
+
 function yPlusPlacement(div, thickness) {
     div.style.bottom = "0"
     div.style.width = "100%"
@@ -136,6 +147,7 @@ function yPlusPlacement(div, thickness) {
     div.style.cursor = "ns-resize"
     return div
 }
+
 function yMinusPlacement(div, thickness) {
     div.style.width = "100%"
     div.style.height = thickness
