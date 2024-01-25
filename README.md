@@ -4,7 +4,7 @@ This library allows you to drag on the configured edges of a grid layout to resi
 
 **Live Demo**: https://thiago099.github.io/grid-resize-helper-example/
 
-**Source**: https://github.com/Thiago099/grid-resize-helper-example
+**Source**: https://github.com/Thiago099/grid-resize-helper-example/
 
 ## Limitations
 

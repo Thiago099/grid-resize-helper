@@ -1,9 +1,22 @@
 {
   "name": "grid-resize-helper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "main.js",
-  "author": "",
   "type": "module",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thiago099/grid-resize-helper.git"
+  },
+  "author": "thiago",
+  "bugs": {
+    "url": "https://github.com/Thiago099/grid-resize-helper/issues"
+  },
+  "homepage": "https://github.com/Thiago099/grid-resize-helper#readme"
+  ,
+  "keywords": [
+    "Grid layout",
+    "Resize"
+  ]
 }
