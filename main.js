@@ -2,7 +2,10 @@ export { makeGridAreasResizable }
 
 function makeGridAreasResizable(container, elements) {
 
-    let thickness = getComputedStyle(container).gap
+    const containerComputedStyle = getComputedStyle(container)
+    const thickness = containerComputedStyle.gap
+    const numColumns = containerComputedStyle.gridTemplateColumns.split(' ').length
+    const numRows = containerComputedStyle.gridTemplateRows.split(' ').length
 
     const placements = {
         "x-": xMinusPlacement,
@@ -18,15 +21,23 @@ function makeGridAreasResizable(container, elements) {
 
     for (const element of elements) {
         const gridAreaElement = container.querySelector(element.query)
-        for (const { position, area } of element.helpers) {
-            axis[position[0]](container, placements[position](createHelper(gridAreaElement), thickness), area)
+        for (let { position, edge } of element.helpers) {
+            if(position[0] == "x" && (edge <= -1 || edge >= numColumns-1)){
+                console.warn(`Horizontal internal edge ${edge} does not exist in the grid, skipping it`)
+                continue;
+            }
+            if(position[0] == "y" && (edge <= -1 || edge >= numRows-1)){
+                console.warn(`Vertical internal edge ${edge} does not exist in the grid, skipping it`)
+                continue;
+            }
+            
+            axis[position[0]](container, placements[position](createHelper(gridAreaElement), thickness), edge)
         }
     }
 }
 
 function xResizable(gridElement, helper, rowIndexToEdit) {
 
-    let width = null
     let rowWidths = null
 
     let xFactor = 0
@@ -36,7 +47,6 @@ function xResizable(gridElement, helper, rowIndexToEdit) {
         const {clientX} = e
         if (helper.contains(e.target)) {
 
-            width = Number(getComputedStyle(gridElement).width.replace("px", ""))
             rowWidths = getComputedStyle(gridElement).gridTemplateColumns.split(' ').map(x => Number(x.replace("px", "")))
 
             gridElement.addEventListener("mousemove", mouseMove)
@@ -70,7 +80,6 @@ function xResizable(gridElement, helper, rowIndexToEdit) {
 
 function yResizable(gridElement, helper, rowIndexToEdit) {
 
-    let height = null
     let colHeights = null
 
     let yFactor = 0
@@ -80,7 +89,6 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
         const { clientY } = e
         if (helper.contains(e.target)) {
 
-            height = Number(getComputedStyle(gridElement).height.replace("px", ""))
             colHeights = getComputedStyle(gridElement).gridTemplateRows.split(' ').map(x => Number(x.replace("px", "")))
 
             gridElement.addEventListener("mousemove", mouseMove)
@@ -112,11 +120,11 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
 
 }
 
-function createHelper(element, thickness) {
+function createHelper(element) {
     element.style.position = "relative"
     let div = document.createElement("div")
     div.style.userSelect = "none"
-    // div.style.backgroundColor = "red"
+    //div.style.backgroundColor = "red"
     div.style.position = "absolute"
     element.appendChild(div)
     return div
