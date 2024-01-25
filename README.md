@@ -2,9 +2,9 @@
 
 This program allow you to make edges of your grid layout resizable
 
-Live Demo: https://thiago099.github.io/grid-resize-helper-example/
+**Live Demo**: https://thiago099.github.io/grid-resize-helper-example/
 
-Source: https://github.com/Thiago099/grid-resize-helper-example
+**Source**: https://github.com/Thiago099/grid-resize-helper-example
 
 ## Limitations
 
