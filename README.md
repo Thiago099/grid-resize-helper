@@ -1,6 +1,6 @@
 ## Description
 
-This program allow you to make edges of your grid layout resizable
+This library allows you to drag on the configured edges of a grid layout to resize it
 
 **Live Demo**: https://thiago099.github.io/grid-resize-helper-example/
 
