@@ -43,9 +43,14 @@ function xResizable(gridElement, helper, rowIndexToEdit) {
     let xFactor = 0
     let wFactor = 0
 
+    let oldUserSelect = null
+
     function mouseDown(e) {
         const {clientX} = e
         if (helper.contains(e.target)) {
+
+            oldUserSelect = gridElement.style.userSelect 
+            gridElement.style.userSelect = "none"
 
             rowWidths = getComputedStyle(gridElement).gridTemplateColumns.split(' ').map(x => Number(x.replace("px", "")))
 
@@ -61,14 +66,15 @@ function xResizable(gridElement, helper, rowIndexToEdit) {
     function mouseUp(e) {
         gridElement.removeEventListener("mousemove", mouseMove)
         gridElement.removeEventListener("mouseUp", mouseUp)
+        gridElement.style.userSelect = oldUserSelect
     }
 
     function mouseMove(e) {
         const { clientX } = e
 
-        let previousWidth = Math.max((clientX - xFactor), 0)
+        let previousWidth = Math.min(Math.max((clientX - xFactor), 0), wFactor)
         rowWidths[rowIndexToEdit] = previousWidth;
-        rowWidths[rowIndexToEdit + 1] = wFactor - previousWidth;
+        rowWidths[rowIndexToEdit + 1] = Math.max(wFactor - previousWidth, 0);
         let newRowsValue = rowWidths.map(x => x+ "fr").join(' ');
 
         gridElement.style.gridTemplateColumns = newRowsValue;
@@ -85,9 +91,14 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
     let yFactor = 0
     let hFactor = 0
 
+    let oldUserSelect = null
+
     function mouseDown(e) {
         const { clientY } = e
         if (helper.contains(e.target)) {
+
+            oldUserSelect = gridElement.style.userSelect 
+            gridElement.style.userSelect = "none"
 
             colHeights = getComputedStyle(gridElement).gridTemplateRows.split(' ').map(x => Number(x.replace("px", "")))
 
@@ -103,14 +114,15 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
     function mouseUp(e) {
         gridElement.removeEventListener("mousemove", mouseMove)
         gridElement.removeEventListener("mouseUp", mouseUp)
+
+        gridElement.style.userSelect = oldUserSelect
     }
 
     function mouseMove(e) {
         const { clientY } = e
-
-        let previousHeight = Math.max((clientY - yFactor), 0)
+        let previousHeight = Math.min(Math.max((clientY - yFactor), 0), hFactor)
         colHeights[rowIndexToEdit] = previousHeight;
-        colHeights[rowIndexToEdit + 1] = hFactor - previousHeight;
+        colHeights[rowIndexToEdit + 1] = Math.max(hFactor - previousHeight, 0);
         let newRowsValue = colHeights.map(x => x + "fr").join(' ');
 
         gridElement.style.gridTemplateRows = newRowsValue;
@@ -123,7 +135,6 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
 function createHelper(element) {
     element.style.position = "relative"
     let div = document.createElement("div")
-    div.style.userSelect = "none"
     //div.style.backgroundColor = "red"
     div.style.position = "absolute"
     element.appendChild(div)
