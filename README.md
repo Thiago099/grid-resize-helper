@@ -8,7 +8,7 @@ This library allows you to drag on the configured edges of a grid layout to resi
 
 ## Limitations
 
-You must specify the areas of your grid you want to make resizable and your grid must have a gap in order for it to work
+You must specify the areas of your grid you want to make resizable and assign them to control a part of the grid
 
 ## Usage:
 
@@ -17,7 +17,9 @@ You must specify the areas of your grid you want to make resizable and your grid
 
     let gridElement = document.querySelector('.container');
 
-    makeGridAreasResizable(gridElement, [
+    makeGridAreasResizable(gridElement, 
+    /* Elements */ 
+    [
         { 
             query: ".menu", // This element will be used to create the helper, it will only be as wide as the element
             helpers: [
@@ -54,7 +56,11 @@ You must specify the areas of your grid you want to make resizable and your grid
                 },
             ]
         }
-    ])
+    ],
+    /*Config */ {
+        //debugBackgroundColor:"rgba(255,0,0,0.3)", // Make the helpers this color instead of invisible
+        thickness:"15px" // This can either be auto (the size of the gap) or a value, relative values are relative to each section of the grid
+    })
 ```
 
 Here is the html for the example:

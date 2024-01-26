@@ -1,9 +1,9 @@
 export { makeGridAreasResizable }
 
-function makeGridAreasResizable(container, elements) {
+function makeGridAreasResizable(container, elements, config={thickness:"15px"}) {
 
     const containerComputedStyle = getComputedStyle(container)
-    const thickness = containerComputedStyle.gap
+    const gap = containerComputedStyle.gap ?? "0px"
     const numColumns = containerComputedStyle.gridTemplateColumns.split(' ').length
     const numRows = containerComputedStyle.gridTemplateRows.split(' ').length
 
@@ -31,7 +31,7 @@ function makeGridAreasResizable(container, elements) {
                 continue;
             }
             
-            axis[position[0]](container, placements[position](createHelper(gridAreaElement), thickness), edge)
+            axis[position[0]](container, placements[position](createHelper(gridAreaElement, config), gap, config), edge)
         }
     }
 }
@@ -132,45 +132,90 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
 
 }
 
-function createHelper(element) {
+function createHelper(element, config) {
     element.style.position = "relative"
     let div = document.createElement("div")
-    //div.style.backgroundColor = "red"
+    if(config?.debugBackgroundColor != null){
+        div.style.backgroundColor = config?.debugBackgroundColor
+    }
+    div.style.zIndex = 1
     div.style.position = "absolute"
     element.appendChild(div)
     return div
 }
 
-function xMinusPlacement(div, thickness) {
-    div.style.width = thickness
+function xMinusPlacement(div, gap, config) {
+    
+    if(config.thickness == "auto"){
+        div.style.width = gap
+        div.style.transform = "translateX(-100%)"
+    }
+    else{
+        if(!/\d/.test(gap)) gap = "0px";
+
+        div.style.width = config.thickness
+        div.style.transform = `translateX(calc(-50% - ${gap} / 2))`
+    }
+
     div.style.height = "100%"
-    div.style.transform = "translateX(-100%)"
     div.style.cursor = "ew-resize"
+
     return div
 }
 
-function xPlusPlacement(div, thickness) {
+function xPlusPlacement(div, gap, config) {
+
+    if(config.thickness == "auto"){
+        div.style.width = gap
+        div.style.transform = "translateX(100%)"
+    }
+    else{
+        if(!/\d/.test(gap)) gap = "0px";
+
+        div.style.width = config.thickness
+        div.style.transform = `translateX(calc(50% + ${gap} / 2))`
+    }
+
     div.style.right = "0"
-    div.style.width = thickness
     div.style.height = "100%"
-    div.style.transform = "translateX(100%)"
     div.style.cursor = "ew-resize"
     return div
 }
 
-function yPlusPlacement(div, thickness) {
+function yPlusPlacement(div, gap, config) {
+
+    if(config.thickness == "auto"){
+        div.style.height = gap
+        div.style.transform = "translateY(100%)"
+    }
+    else{
+        if(!/\d/.test(gap)) gap = "0px";
+
+        div.style.height = config.thickness
+        div.style.transform = `translateY(calc(50% + ${gap} / 2))`
+    }
+
+
     div.style.bottom = "0"
     div.style.width = "100%"
-    div.style.height = thickness
-    div.style.transform = "translateY(100%)"
     div.style.cursor = "ns-resize"
     return div
 }
 
-function yMinusPlacement(div, thickness) {
+function yMinusPlacement(div, gap, config) {
+
+    if(config.thickness == "auto"){
+        div.style.height = gap
+        div.style.transform = "translateY(-100%)"
+    }
+    else{
+        if(!/\d/.test(gap)) gap = "0px";
+
+        div.style.height = config.thickness
+        div.style.transform = `translateY(calc(-50% - ${gap} / 2))`
+    }
+
     div.style.width = "100%"
-    div.style.height = thickness
-    div.style.transform = "translateY(-100%)"
     div.style.cursor = "ns-resize"
     return div
 }
