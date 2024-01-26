@@ -26,11 +26,11 @@ function makeGridAreasResizable(container, elements, config={}) {
     for (const element of elements) {
         const gridAreaElement = container.querySelector(element.query)
         for (let { position, edge } of element.helpers) {
-            if(position[0] == "x" && (edge <= -1 || edge >= numColumns-1)){
+            if(position[0] == "x" && (edge < 0 || edge > numColumns/2)){
                 console.warn(`Horizontal internal edge ${edge} does not exist in the grid, skipping it`)
                 continue;
             }
-            if(position[0] == "y" && (edge <= -1 || edge >= numRows-1)){
+            if(position[0] == "y" && (edge < 0 || edge > numRows/2)){
                 console.warn(`Vertical internal edge ${edge} does not exist in the grid, skipping it`)
                 continue;
             }
