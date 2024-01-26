@@ -1,6 +1,10 @@
 export { makeGridAreasResizable }
 
-function makeGridAreasResizable(container, elements, config={thickness:"15px"}) {
+function makeGridAreasResizable(container, elements, config={}) {
+
+    if(config.thickness == null) config.thickness = "15px"
+    if(config.minWidth == null) config.minWidth = 0
+    if(config.minHeight == null) config.minHeight = 0
 
     const containerComputedStyle = getComputedStyle(container)
     const gap = containerComputedStyle.gap ?? "0px"
@@ -31,12 +35,12 @@ function makeGridAreasResizable(container, elements, config={thickness:"15px"}) 
                 continue;
             }
             
-            axis[position[0]](container, placements[position](createHelper(gridAreaElement, config), gap, config), edge)
+            axis[position[0]](container, placements[position](createHelper(gridAreaElement, config), gap, config), edge, config)
         }
     }
 }
 
-function xResizable(gridElement, helper, rowIndexToEdit) {
+function xResizable(gridElement, helper, rowIndexToEdit, config) {
 
     let rowWidths = null
 
@@ -72,7 +76,7 @@ function xResizable(gridElement, helper, rowIndexToEdit) {
     function mouseMove(e) {
         const { clientX } = e
 
-        let previousWidth = Math.min(Math.max((clientX - xFactor), 0), wFactor)
+        let previousWidth = Math.min(Math.max((clientX - xFactor), config.minWidth), wFactor - config.minWidth)
         rowWidths[rowIndexToEdit] = previousWidth;
         rowWidths[rowIndexToEdit + 1] = Math.max(wFactor - previousWidth, 0);
         let newRowsValue = rowWidths.map(x => x+ "fr").join(' ');
@@ -84,7 +88,7 @@ function xResizable(gridElement, helper, rowIndexToEdit) {
 
 }
 
-function yResizable(gridElement, helper, rowIndexToEdit) {
+function yResizable(gridElement, helper, rowIndexToEdit, config) {
 
     let colHeights = null
 
@@ -120,7 +124,7 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
 
     function mouseMove(e) {
         const { clientY } = e
-        let previousHeight = Math.min(Math.max((clientY - yFactor), 0), hFactor)
+        let previousHeight = Math.min(Math.max((clientY - yFactor), config.minHeight), hFactor - config.minHeight)
         colHeights[rowIndexToEdit] = previousHeight;
         colHeights[rowIndexToEdit + 1] = Math.max(hFactor - previousHeight, 0);
         let newRowsValue = colHeights.map(x => x + "fr").join(' ');
@@ -135,9 +139,11 @@ function yResizable(gridElement, helper, rowIndexToEdit) {
 function createHelper(element, config) {
     element.style.position = "relative"
     let div = document.createElement("div")
-    if(config?.debugBackgroundColor != null){
-        div.style.backgroundColor = config?.debugBackgroundColor
+
+    if(config.debugBackgroundColor != null){
+        div.style.backgroundColor = config.debugBackgroundColor
     }
+    
     div.style.zIndex = 1
     div.style.position = "absolute"
     element.appendChild(div)

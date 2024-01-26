@@ -60,6 +60,8 @@ You must specify the areas of your grid you want to make resizable and assign th
     /*Config */ { // Optional, this is the default value
         //debugBackgroundColor:"rgba(255,0,0,0.3)", // Make the helpers this color instead of invisible
         thickness:"15px" // This can either be auto (the size of the gap) or a value, relative values are relative to each section of the grid
+        minWidth: 30, // minium width of a section in pixels
+        minHeight: 30, // minimun height of a section in pixels
     })
 ```
 
