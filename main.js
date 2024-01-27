@@ -5,6 +5,8 @@ function makeGridAreasResizable(container, elements, config={}) {
     if(config.thickness == null) config.thickness = "15px"
     if(config.minWidth == null) config.minWidth = 30
     if(config.minHeight == null) config.minHeight = 30
+    if(config.helperClass == null) config.helperClass = null
+    if(config.helperActiveClass == null) config.helperActiveClass = null
 
     const containerComputedStyle = getComputedStyle(container)
     const gap = containerComputedStyle.gap ?? "0px"
@@ -53,28 +55,36 @@ function xResizable(gridElement, helper, rowIndexToEdit, config) {
 
     let oldUserSelect = null
 
+    helper.addEventListener("mousedown", mouseDown)
+
     function mouseDown(e) {
         const {clientX} = e
-        if (helper.contains(e.target)) {
 
-            oldUserSelect = gridElement.style.userSelect 
-            gridElement.style.userSelect = "none"
-
-            rowWidths = getComputedStyle(gridElement).gridTemplateColumns.split(' ').map(x => Number(x.replace("px", "")))
-
-            gridElement.addEventListener("mousemove", mouseMove)
-            gridElement.addEventListener("mouseup", mouseUp)
-
-            let sw = rowWidths[rowIndexToEdit]
-            wFactor = rowWidths[rowIndexToEdit + 1] + sw
-            xFactor = clientX - sw
+        if(config.helperActiveClass != null){
+            helper.classList.add(config.helperActiveClass)
         }
+
+        oldUserSelect = gridElement.style.userSelect 
+        gridElement.style.userSelect = "none"
+
+        rowWidths = getComputedStyle(gridElement).gridTemplateColumns.split(' ').map(x => Number(x.replace("px", "")))
+
+        gridElement.addEventListener("mousemove", mouseMove)
+        gridElement.addEventListener("mouseup", mouseUp)
+
+        let sw = rowWidths[rowIndexToEdit]
+        wFactor = rowWidths[rowIndexToEdit + 1] + sw
+        xFactor = clientX - sw
     }
 
     function mouseUp(e) {
         gridElement.removeEventListener("mousemove", mouseMove)
         gridElement.removeEventListener("mouseUp", mouseUp)
         gridElement.style.userSelect = oldUserSelect
+
+        if(config.helperActiveClass != null){
+            helper.classList.remove(config.helperActiveClass)
+        }
     }
 
     function mouseMove(e) {
@@ -87,9 +97,6 @@ function xResizable(gridElement, helper, rowIndexToEdit, config) {
 
         gridElement.style.gridTemplateColumns = newRowsValue;
     }
-
-    gridElement.addEventListener("mousedown", mouseDown)
-
 }
 
 function yResizable(gridElement, helper, rowIndexToEdit, config) {
@@ -101,27 +108,35 @@ function yResizable(gridElement, helper, rowIndexToEdit, config) {
 
     let oldUserSelect = null
 
+    helper.addEventListener("mousedown", mouseDown)
+
     function mouseDown(e) {
         const { clientY } = e
-        if (helper.contains(e.target)) {
 
-            oldUserSelect = gridElement.style.userSelect 
-            gridElement.style.userSelect = "none"
-
-            colHeights = getComputedStyle(gridElement).gridTemplateRows.split(' ').map(x => Number(x.replace("px", "")))
-
-            gridElement.addEventListener("mousemove", mouseMove)
-            gridElement.addEventListener("mouseup", mouseUp)
-
-            let sw = colHeights[rowIndexToEdit]
-            hFactor = colHeights[rowIndexToEdit + 1] + sw
-            yFactor = clientY - sw
+        if(config.helperActiveClass != null){
+            helper.classList.add(config.helperActiveClass)
         }
+
+        oldUserSelect = gridElement.style.userSelect 
+        gridElement.style.userSelect = "none"
+
+        colHeights = getComputedStyle(gridElement).gridTemplateRows.split(' ').map(x => Number(x.replace("px", "")))
+
+        gridElement.addEventListener("mousemove", mouseMove)
+        gridElement.addEventListener("mouseup", mouseUp)
+
+        let sw = colHeights[rowIndexToEdit]
+        hFactor = colHeights[rowIndexToEdit + 1] + sw
+        yFactor = clientY - sw
     }
 
     function mouseUp(e) {
         gridElement.removeEventListener("mousemove", mouseMove)
         gridElement.removeEventListener("mouseUp", mouseUp)
+
+        if(config.helperActiveClass != null){
+            helper.classList.remove(config.helperActiveClass)
+        }
 
         gridElement.style.userSelect = oldUserSelect
     }
@@ -136,7 +151,6 @@ function yResizable(gridElement, helper, rowIndexToEdit, config) {
         gridElement.style.gridTemplateRows = newRowsValue;
     }
 
-    gridElement.addEventListener("mousedown", mouseDown)
 
 }
 
@@ -144,8 +158,8 @@ function createHelper(element, config) {
     element.style.position = "relative"
     let div = document.createElement("div")
 
-    if(config.debugBackgroundColor != null){
-        div.style.backgroundColor = config.debugBackgroundColor
+    if(config.helperClass != null){
+        div.classList.add(config.helperClass)
     }
     
     div.style.zIndex = 1
