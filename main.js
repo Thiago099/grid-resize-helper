@@ -3,8 +3,8 @@ export { makeGridAreasResizable }
 function makeGridAreasResizable(container, elements, config={}) {
 
     if(config.thickness == null) config.thickness = "15px"
-    if(config.minWidth == null) config.minWidth = 0
-    if(config.minHeight == null) config.minHeight = 0
+    if(config.minWidth == null) config.minWidth = 30
+    if(config.minHeight == null) config.minHeight = 30
 
     const containerComputedStyle = getComputedStyle(container)
     const gap = containerComputedStyle.gap ?? "0px"
